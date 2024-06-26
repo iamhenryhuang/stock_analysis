@@ -1,3 +1,4 @@
+# Use python crawler to grab the index statics every five seconds in TW stock
 import requests
 import datetime
 import pandas as pd
