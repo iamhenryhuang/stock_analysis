@@ -49,10 +49,9 @@ try:
     stocks[('MTK', 'William')] = ((highest_high - stocks[('MTK', 'Close')]) / (highest_high - lowest_low)) * -100
     
     # 繪製威廉指數
-    stocks['MTK'].loc['2021-11':'2021-12', 'William'].plot(kind='line', grid=True, figsize=(10, 10), title='MTK William %R (Nov 2021 - Dec 2021)')
+    stocks['MTK'].loc['2024-01-01':'2024-07-01', 'William'].plot(kind='line', grid=True, figsize=(10, 10), title='MTK William %R (2024-01-01 - 2024-07-01)')
     plt.xlabel('Date')
     plt.ylabel('William %R')
-    plt.savefig('william_r_plot.png')
     plt.show()
 
 except Exception as e:
