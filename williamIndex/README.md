@@ -14,5 +14,3 @@ You can install these packages using pip:
 
 ```sh
 pip install requests pandas matplotlib
-
-![image](https://github.com/iamhenryhuang/stock_analysis/williamIndex/williamIndex.png)
