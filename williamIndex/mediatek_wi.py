@@ -52,6 +52,7 @@ try:
     stocks['MTK'].loc['2021-11':'2021-12', 'William'].plot(kind='line', grid=True, figsize=(10, 10), title='MTK William %R (Nov 2021 - Dec 2021)')
     plt.xlabel('Date')
     plt.ylabel('William %R')
+    plt.savefig('william_r_plot.png')
     plt.show()
 
 except Exception as e:
