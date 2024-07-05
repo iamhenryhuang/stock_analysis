@@ -11,7 +11,7 @@ Make sure you have the following Python packages installed:
 - matplotlib
 
 ## Outcome
-![image](https://github.com/iamhenryhuang/stock_analysis/williamIndex/williamIndex.png)
+![image](https://github.com/iamhenryhuang/stock_analysis/williamIndex/main/williamIndex.png)
 
 You can install these packages using pip:
 
