@@ -43,11 +43,11 @@ try:
     tsmc_lower = stocks[('TSMC')].resample('ME').mean().quantile(0.1)
     
     # 繪製收盤價線圖
-    #stocks.plot(kind="line", grid=True, figsize=(10, 10), title='MTK Close Prices')
-    stocks[('TSMC')].plot(kind="line", grid=True, figsize=(10, 10), title='TSMC Close Prices')
+    #stocks.plot(kind="line", grid=True, figsize=(10, 10), title='MTK Closing Price')
+    stocks[('TSMC')].plot(kind="line", grid=True, figsize=(10, 10), title='TSMC Closing Price')
     plt.hlines([tsmc_upper, tsmc_lower], stocks[('TSMC')].index[0], stocks[('TSMC')].index[-1])
     plt.xlabel('Date')
-    plt.ylabel('Close Price')
+    plt.ylabel('Closing Price')
     plt.show()
 
 except Exception as e:
