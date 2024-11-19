@@ -1,42 +1,25 @@
-import requests
+import yfinance as yf
 import pandas as pd
-import datetime as dt
-import time
-import io
 import matplotlib.pyplot as plt
-import warnings
+import datetime as dt
 
-warnings.filterwarnings("ignore", category=FutureWarning, message="Period with BDay freq is deprecated and will be removed in a future version. Use a DatetimeIndex with BDay freq instead.")
-
+# 獲取 Yahoo Finance 數據的函數
 def get_yahoo_finance_data(symbol, start, end):
-    start_timestamp = int(start.timestamp())
-    end_timestamp = int(end.timestamp())
-    url = f"https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={start_timestamp}&period2={end_timestamp}&interval=1d&events=history"
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-    }
-
-    response = requests.get(url, headers=headers)
+    # 使用 yfinance 下載數據
+    df = yf.download(symbol, start=start, end=end)
     
-    if response.status_code != 200:
-        raise Exception(f"Failed to fetch data: {response.status_code}")
-    
-    # 解析 CSV 數據
-    data = response.content.decode('utf-8')
-    df = pd.read_csv(io.StringIO(data))
-    
-    df['Date'] = pd.to_datetime(df['Date'])
-    df.set_index('Date', inplace=True)
+    # 確保數據包含必要的欄位
+    if not all(col in df.columns for col in ['High', 'Low', 'Close']):
+        raise Exception("Failed to fetch required data columns (High, Low, Close)")
     
     return df
 
-start = dt.datetime(2020, 1, 1)
-end = dt.datetime.now()
+# 定義日期範圍
+start = "2020-01-01"
+end = dt.datetime.now().strftime('%Y-%m-%d')
 
 try:
-    time.sleep(0.5)
-
+    # 獲取台積電 (2330.TW) 的數據
     df_2330 = get_yahoo_finance_data('2330.TW', start, end)
 
     # 構建包含所需價格的 DataFrame
@@ -49,14 +32,19 @@ try:
     stocks[('TSMC', 'William')] = ((highest_high - stocks[('TSMC', 'Close')]) / (highest_high - lowest_low)) * -100
     
     # 繪製威廉指數
-    stocks['TSMC'].loc['2024-01-01':'2024-07-01', 'William'].plot(kind='line', grid=True, figsize=(10, 10), title='TSMC William %R (2024-01-01 - 2024-07-01)')
+    stocks['TSMC'].loc['2024-01-01':'2024-11-20', 'William'].plot(
+        kind='line', 
+        grid=True, 
+        figsize=(10, 6), 
+        title='TSMC William %R (2024-01-01 - 2024-11-20)'
+    )
     plt.xlabel('Date')
     plt.ylabel('William %R')
     plt.show()
 
 except Exception as e:
     print(e)
-    
+
 # note
 """
 威廉指標可以幫助判斷目前價格是否處於超買或超賣，並抓出股價轉折點，找到適合的進出場時機。
