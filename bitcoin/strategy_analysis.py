@@ -1,30 +1,15 @@
-import requests
+import yfinance as yf
 import pandas as pd
 import datetime as dt
-import time
-import io
 import matplotlib.pyplot as plt
 
 def get_yahoo_finance_data(symbol, start, end):
-    start_timestamp = int(start.timestamp())
-    end_timestamp = int(end.timestamp())
-    url = f"https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={start_timestamp}&period2={end_timestamp}&interval=1d&events=history"
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-    }
-
-    response = requests.get(url, headers=headers)
+    # 使用 yfinance 下載數據
+    df = yf.download(symbol, start=start, end=end)
     
-    if response.status_code != 200:
-        raise Exception(f"Failed to fetch data: {response.status_code}")
-    
-    # 解析 CSV 數據
-    data = response.content.decode('utf-8')
-    df = pd.read_csv(io.StringIO(data))
-    
-    df['Date'] = pd.to_datetime(df['Date'])
-    df.set_index('Date', inplace=True)
+    # 確保數據包含必要的欄位
+    if 'Close' not in df.columns:
+        raise Exception("Failed to fetch Close price data")
     
     return df
 
@@ -77,14 +62,11 @@ def strategy(df, total, ma_num, stop_earn):
 
     return better_buy, better_sell
 
-
 #-----------------------#
-start = dt.datetime(2024, 5, 1)
-end = dt.datetime.now()
+start = "2024-01-01"
+end = dt.datetime.now().strftime('%Y-%m-%d')
 
 try:
-    time.sleep(5)
-
     df_btc = get_yahoo_finance_data('BTC-USD', start, end)
     
     total = 100000  # 初始資金
@@ -95,7 +77,7 @@ try:
     
     # 繪製 價格 & 均線圖
     df_btc['MA'] = df_btc['Close'].rolling(window=ma_num).mean()
-    selected_data = df_btc.loc['2024-06-07':'2024-07-07', ['Close', 'MA']]
+    selected_data = df_btc.loc['2024-01-22':'2024-07-22', ['Close', 'MA']]
     
     selected_data.plot(kind='line', grid=True, figsize=(10, 10), title='Bitcoin Close Prices and Moving Averages')
     plt.xlabel('Date')
