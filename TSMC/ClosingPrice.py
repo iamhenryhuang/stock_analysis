@@ -12,7 +12,7 @@ def get_yahoo_finance_data(symbol, start, end):
     return df
 
 start = "2020-01-01"
-end = "2024-11-20"
+end = dt.datetime.now().strftime('%Y-%m-%d')
 
 try:
     # 獲取台積電 (2330.TW) 的數據
